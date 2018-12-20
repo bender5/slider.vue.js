@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Слайдер Vue.js</title>
+<meta charset="utf-8" />
+</head>
+<body>
+<script src="https://unpkg.com/vue"></script>
+<div id="app">
+  
+  <carousel-component>
+    <carousel-item>
+      <h2>Дуже прикольна фотка</h2>
+      <img src="фотки/1.jpeg" alt="фото">
+    </carousel-item>
+    <carousel-item>
+      <h2>І ще одна дуже прикольна фотка</h2>
+      <img src="фотки/2.jpg" alt="фото">
+    </carousel-item>
+    <carousel-item>
+      <h2>І це начебто нічого</h2>
+      <img src="фотки/3.jpg" alt="фото">
+    </carousel-item>
+    <carousel-item>
+      <h2>І ще одна</h2>
+      <img src="фотки/4.jpg" alt="фото">
+    </carousel-item>
+	<carousel-item>
+      <h2>Ну ще одна</h2>
+      <img src="фотки/5.jpg" alt="фото">
+    </carousel-item>
+	<carousel-item>
+      <h2>І остання</h2>
+      <img src="фотки/6.jpg" alt="фото">
+    </carousel-item>
+	<carousel-item>
+      <h2>Та ще нє</h2>
+      <img src="фотки/7.jpg" alt="фото">
+    </carousel-item>
+	<carousel-item>
+      <h2>Ну це вже точно</h2>
+      <img src="фотки/8.jpg" alt="фото">
+    </carousel-item>
+	<carousel-item>
+      <h2>Блін посипались</h2>
+      <img src="фотки\9.jpg" alt="фото">
+    </carousel-item>
+	<carousel-item>
+      <h2>Скільке ще</h2>
+      <img src="фотки/10.jpg" alt="фото">
+    </carousel-item>
+	<carousel-item>
+      <h2>Досить</h2>
+      <img src="фотки/11.jpg" alt="фото">
+    </carousel-item>
+	<carousel-item>
+      <h2>Alpaca</h2>
+      <video src="фотки/1.mp4" width="640" height="570" controls="controls"> Ваш браузер не підтримує елемент video. </video>
+    </carousel-item>
+  </carousel-component>
+  
+</div>
+
+<style>
+
+body {
+	margin: 0;
+	padding: 0;
+	color: #FFFF00;
+	background: #2F4F4F;
+}
+
+   #app 
+        {
+          margin: 10px auto;
+          width: 80%;
+		  height: 80%;
+        }
+
+        .carousel-component {
+          position: relative;
+		  text-align: center;
+          overflow: hidden;
+        }
+
+        .carousel-page {
+           visibility: hidden;
+           position: absolute;
+           top: 0;
+           left: 0;
+           width: 100%;
+           transition: 0.5s;
+           padding: 10px;
+           border: 3px solid #FF4500;
+
+        h2 {
+            margin: 0;
+           }
+
+        img {
+             width: 300px;
+            }
+    }
+
+        .carousel-page.active {
+           visibility: visible;
+           position: static;
+        }
+
+        .carousel-nav-попередня,
+        .carousel-nav-наступна {
+           position: absolute;
+           top: 50%;
+           transform: translate(0, -50%);
+           display: block;
+           width: 150px;
+           height: 50px;
+           border: 0;
+           background: rgba(0, 0, 0, 0.5);
+           color: #ADFF2F;
+           cursor: pointer;
+        }
+
+        .carousel-nav-попередня {
+           left: 5px;
+        }
+
+        .carousel-nav-наступна {
+           right: 5px;
+        }
+</style>
+
+<script>
+Vue.component('carousel-component', {
+  render: function (createElement) {
+    return createElement('div', { class: 'carousel-component' },
+                         this.items.map((item, index) =>
+                                        createElement('div', {
+      'class': 'carousel-page' + (this.current === index ? ' active' : ''),
+      style: {
+        transform: `translate3d(${this.position(index) * 100}%, 0, 0)`,
+      }
+    }, [item])
+                                       ).concat([
+      createElement('button', {
+        'class': 'carousel-nav-попередня',
+        on: { click: () => { this.decreaseCurrent(); } }
+      }, 'Попередня'),
+      createElement('button', {
+        'class': 'carousel-nav-наступна',
+        on: { click: () => { this.increaseCurrent(); } }
+      }, 'Наступна')
+    ])
+                        );
+  },
+  data: function() {
+    return {
+      current: 0
+    };
+  },
+  computed: {
+    items: function() {
+      return this.$slots.default.filter(function(item) {
+        return item.componentOptions !== undefined &&
+          item.componentOptions.tag === 'carousel-item';
+      });
+    }
+  },
+  methods: {
+    decreaseCurrent: function() {
+      this.current += this.items.length - 1;
+      this.current %= this.items.length;
+    },
+    increaseCurrent: function() {
+      this.current += 1;
+      this.current %= this.items.length;
+    },
+    position: function(index) {
+      if (index === this.current) return 0;
+      if (index === (this.current + 1) % this.items.length) return 1;
+      return -1;
+    }
+  }
+});
+
+Vue.component('carousel-item', {
+  render: function (createElement) {
+    return createElement('div', { class: 'carousel-item' }, this.$slots.default);
+  }
+});
+
+new Vue({
+  el: '#app'
+});
+</script>
+</body>
+</html>
